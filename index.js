@@ -1,6 +1,9 @@
 const express = require("express");
 const app = express();
 const port = 3000;
+const createError = require("http-errors");
+
+app.use(express.json());
 
 app.get("/", (req, res) => {
   const links = `
@@ -14,6 +17,14 @@ app.use("/person", require("./controller"));
 
 app.use("/", (req, res) => {
   res.send("404");
+});
+
+app.use((err, req, res, next) => {
+  // res.status(err.statusCode);
+  res.json({
+    hasError: true,
+    message: err.message,
+  });
 });
 
 app.listen(port, () => {
